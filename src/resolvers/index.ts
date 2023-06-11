@@ -1,8 +1,12 @@
 import { UserResolver } from './user.resolver'
-// import { BookingResolver } from './booking.resolver'
-import {ArticleResolver} from './article.resolver'
+import { ArticleResolver } from './article.resolver'
+import { ProductResolver } from './product.resolver'
+import { NutritionCategoryResolver } from './nutritionCategory.resolver'
+import { RecepyService } from '../services/recepy.service'
 export const resolvers = [
   UserResolver,
-  // BookingResolver,
   ArticleResolver,
+  ProductResolver,
+  NutritionCategoryResolver,
+  RecepyService,
 ] as const

@@ -1,6 +1,6 @@
 import { Field, InputType, ObjectType } from 'type-graphql'
 import { getModelForClass, prop as Prop, Ref } from '@typegoose/typegoose'
-import { IsDate, MinLength } from 'class-validator'
+import { IsDate, MinLength, IsNumber } from 'class-validator'
 import PaginatedResponse from './pagination.schema'
 import { BaseModel } from './model.schema'
 import { User } from './user.schema'
@@ -29,9 +29,9 @@ export const ReviewModel = getModelForClass(Review,
   })
 
 @InputType()
-export class BaseReviewInput {
+export class ReviewInput {
   @Field()
-  @MinLength(1)
+  @IsNumber()
   rating: number
   @Field()
   @MinLength(3)

@@ -2,7 +2,7 @@ import { Resolver, Query, Arg, Args, Mutation, Authorized, Ctx } from 'type-grap
 import { PaginationInput } from '../schema/pagination.schema'
 import { UserRole } from '../enums/user-role'
 import { ArticleService } from '../services/article.service'
-import { Article, ArticleInput, PaginatedArticleResponse } from '../schema/article.schema'
+import { Article, ArticleInput, PaginatedArticleResponse, ArticleInputReview } from '../schema/article.schema'
 import { Context } from '../types/context'
 
 @Resolver()
@@ -41,4 +41,9 @@ export class ArticleResolver {
     return this.articleService.updateArticle(_id, article)
   }
 
+  @Mutation(() => Article)
+  async updateArticleWithReviews(@Arg('_id') _id: string,
+                   @Arg('article') article: ArticleInputReview):Promise<Article> {
+    return this.articleService.updateArticleReviews(_id, article)
+  }
 }

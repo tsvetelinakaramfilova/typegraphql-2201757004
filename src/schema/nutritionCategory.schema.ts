@@ -2,9 +2,9 @@ import { Field, InputType, ObjectType } from 'type-graphql'
 import { BaseModel } from './model.schema'
 import { getModelForClass, prop as Prop, Ref } from '@typegoose/typegoose'
 import PaginatedResponse from './pagination.schema'
-import { IsDate, MinLength } from 'class-validator'
+import { IsString, MinLength, ArrayMinSize } from 'class-validator'
 import { Types } from 'mongoose'
-import { Product } from './product.schema'
+import { Product, ProductInput } from './product.schema'
 
 @ObjectType()
 export class NutritionCategory extends BaseModel {
@@ -17,12 +17,13 @@ export class NutritionCategory extends BaseModel {
   @Prop({ nullable: true })
   image?: string
 
-  // @Field(() => Product)
-  // @Prop({ ref: Product, required: true })
-  // products: Ref<Product, Types.ObjectId>
+  // @Field(() => [Product])
+  // @Prop({ type: [{ ref: Product }] })
+  // products?: Ref<Product, Types.ObjectId>[]
   @Field(() => [Product])
-  @Prop({ type: [{ ref: Product }] })
-  products?: Ref<Product, Types.ObjectId>[]
+  @Prop({ nullable: true, type: [Product] })
+  products?: Product[]
+
 }
 
 export const NutritionCategoryModel = getModelForClass(NutritionCategory,
@@ -35,6 +36,16 @@ export class NutritionCategoryInput {
   @Field()
   @MinLength(3)
   name: string
+  @Field(() => String, { nullable: true })
+  @IsString({ each: true })
+  images?: string
+}
+
+@InputType()
+export class NutritionCategoryInputProduct {
+  @Field(() => [ProductInput])
+  @ArrayMinSize(1)
+  products?: Product[];
 }
 
 @ObjectType()

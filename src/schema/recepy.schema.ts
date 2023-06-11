@@ -2,7 +2,7 @@ import { Field, InputType, ObjectType } from 'type-graphql'
 import { BaseModel } from './model.schema'
 import { getModelForClass, prop as Prop, Ref } from '@typegoose/typegoose'
 import PaginatedResponse from './pagination.schema'
-import { IsDate, MinLength } from 'class-validator'
+import { ArrayMinSize, IsDate, IsNumber, MinLength } from 'class-validator'
 import { User } from './user.schema'
 import { Types } from 'mongoose'
 import { Review } from './review.schema'
@@ -15,10 +15,8 @@ export class Recepy extends BaseModel {
   @Prop({ required: true })
   name: string
 
-  // @Field(() => [String])
-  // @Prop({ required: true, type: [String] }) 
-  @Field()
-  @Prop({ nullable: true })
+  @Field(() => [String])
+  @Prop({ nullable: true, type: [String] })
   images?: string[]
 
   @Field()
@@ -27,13 +25,13 @@ export class Recepy extends BaseModel {
 
   //@Prop([{ quantityProduct: Number, product: { type: Types.ObjectId, ref: 'Product' } }])
   // products?: Array<{ quantityProduct: number, product: Product }>;
-  @Field(() => [{ quantityProduct: Number, product: Product }])
-  @Prop({ type: [{ quantityProduct: Number, product: { ref: Product } }] })
-  products?: { quantityProduct: number; product: Ref<Product, Types.ObjectId> }[];
+  // @Field(() => [{ quantityProduct: Number, product: Product }])
+  // @Prop({ nullable: true, type: [{ quantityProduct: Number, product: { ref: Product } }] })
+  // products?: { quantityProduct: number; product: Ref<Product, Types.ObjectId> }[]
 
-  // @Field(() => User)
-  // @Prop({ ref: User, required: true })
-  // user: Ref<User, Types.ObjectId>
+  @Field(() => User)
+  @Prop({ ref: User, required: true })
+  user: Ref<User, Types.ObjectId>
 
   // @Field(() => Number)
   // @Prop({ required: true, type: Number})
@@ -42,8 +40,8 @@ export class Recepy extends BaseModel {
   timeToCook: number
 
   @Field(() => [Review])
-  @Prop({ type: [{ ref: Review }] })
-  reviews?: Ref<Review, Types.ObjectId>[]
+  @Prop({ nullable: true, type: [Review] })
+  reviews?: Review[]
 }
 
 export const RecepyModel = getModelForClass(Recepy,
@@ -63,8 +61,18 @@ export class RecepyInput {
   @Field(() => Date)
   dateOfEntry: Date
   @Field()
-  @MinLength(1)
+  @IsNumber()
   timeToCook: number
+  // @Field(() => [{ quantityProduct: Number, product: Product }])
+  // @ArrayMinSize(1)
+  // products?: { quantityProduct: number; product: Product }[]
+}
+
+@InputType()
+export class ArticleInputReview {
+  @Field(() => [RecepyInput])
+  @ArrayMinSize(1)
+  reviews?: Review[]
 }
 
 @ObjectType()

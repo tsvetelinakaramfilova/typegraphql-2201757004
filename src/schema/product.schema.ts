@@ -1,8 +1,10 @@
 import { Field, InputType, ObjectType } from 'type-graphql'
 import { BaseModel } from './model.schema'
-import { getModelForClass, prop as Prop } from '@typegoose/typegoose'
+import { getModelForClass, prop as Prop, Ref } from '@typegoose/typegoose'
 import PaginatedResponse from './pagination.schema'
-import { MinLength } from 'class-validator'
+import { MinLength, IsNumber } from 'class-validator'
+import { User } from './user.schema'
+import { Types } from 'mongoose'
 
 @ObjectType()
 export class Product extends BaseModel {
@@ -11,39 +13,33 @@ export class Product extends BaseModel {
   @Prop({ required: true })
   name: string
 
-  // @Field(() => [String])
-  // @Prop({ required: true, type: [String] }) 
   @Field()
   @Prop({ nullable: true })
   image?: string
 
-  // @Field(() => Number)
-  // @Prop({ required: true, type: Number})
-  @Field()
-  @Prop({ required: true })
+  @Field(() => Number)
+  @Prop({ required: true, type: Number})
   calories: number
 
-  // @Field(() => Number)
-  // @Prop({ required: true, type: Number})
-  @Field()
-  @Prop({ required: true })
+  @Field(() => Number)
+  @Prop({ required: true, type: Number})
   protein: number
 
-  // @Field(() => Number)
-  // @Prop({ required: true, type: Number})
-  @Field()
-  @Prop({ required: true })
+  @Field(() => Number)
+  @Prop({ required: true, type: Number})
   carbohydratea: number
 
-  // @Field(() => Number)
-  // @Prop({ required: true, type: Number})
-  @Field()
-  @Prop({ required: true })
+  @Field(() => Number)
+  @Prop({ required: true, type: Number})
   fats: number
 
   @Field()
   @Prop({ required: true })
   description: string
+
+  @Field(() => User)
+  @Prop({ ref: User, required: true })
+  user: Ref<User, Types.ObjectId>
 }
 
 export const ProductModel = getModelForClass(Product,
@@ -54,19 +50,19 @@ export const ProductModel = getModelForClass(Product,
 @InputType()
 export class ProductInput {
   @Field()
-  @MinLength(3)
+  @MinLength(2)
   name: string
   @Field()
-  @MinLength(1)
+  @IsNumber()
   calories: number
   @Field()
-  @MinLength(1)
+  @IsNumber()
   protein: number
   @Field()
-  @MinLength(1)
+  @IsNumber()
   carbohydratea: number
   @Field()
-  @MinLength(1)
+  @IsNumber()
   fats: number
   @Field()
   @MinLength(3)
