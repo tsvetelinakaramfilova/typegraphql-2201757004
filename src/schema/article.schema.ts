@@ -2,7 +2,7 @@ import { Field, InputType, ObjectType } from 'type-graphql'
 import { BaseModel } from './model.schema'
 import { getModelForClass, prop as Prop, Ref } from '@typegoose/typegoose'
 import PaginatedResponse from './pagination.schema'
-import { IsDate, MinLength, IsString } from 'class-validator'
+import { IsDate, MinLength, IsString, IsNumber } from 'class-validator'
 import { User } from './user.schema'
 import { Types } from 'mongoose'
 import { Review } from './review.schema'
@@ -61,14 +61,14 @@ export class ArticleInput {
   @Field()
   @MinLength(3)
   description: string
-  @Field(() => [String])
+  @Field(() => [String], { nullable: true })
   @IsString({ each: true })
-  images: string[]
+  images?: string[]
   @IsDate()
   @Field(() => Date)
   dateOfEntry: Date
   @Field()
-  @MinLength(1)
+  @IsNumber()
   timeRead: number
   @Field(() => [String], { nullable: true })
   @IsString({ each: true })
